@@ -1,33 +1,34 @@
 # Requesty — Unified Multi-Model AI Inference Platform Built on Google Cloud
 
-**Requesty** is a unified LLM inference and optimization platform that allows any product or engineering team to access, scale, secure, and monitor 200+ AI models through a **single OpenAI-compatible API**.
+**Requesty** is a unified LLM inference and optimization platform that enables any product or engineering team to access, scale, secure, and monitor 200+ AI models through a **single OpenAI-compatible API**.
 
-This document describes how Requesty is built on **Google Cloud**, the GCP services it uses, the architecture of the system, and how it integrates with Google Cloud’s AI, serverless, and security offerings.
+This document explains how Requesty is deployed on **Google Cloud**, the GCP services it uses, the architecture of the system, and how it integrates with Google Cloud’s AI, serverless, and security offerings.
 
 ---
 
 ## 🚀 Overview
 
-Requesty solves one of the biggest challenges in modern AI development:  
-**AI providers, APIs, costs, latency and reliability vary widely.**
+Modern AI development faces a major challenge:  
+**AI providers, APIs, latency, cost, and reliability vary drastically.**
 
-Instead of integrating dozens of different LLM providers, teams use Requesty as a **single inference layer** that provides:
+Requesty solves this by acting as a **single inference layer**, offering:
 
 - One OpenAI-compatible API endpoint  
-- Routing across 200+ models (OpenAI, Anthropic, Mistral, Google Gemini, AWS Bedrock, etc.)  
-- Built-in telemetry, analytics and performance monitoring  
+- Routing across 200+ models (OpenAI, Anthropic, Google Gemini, Mistral, AWS Bedrock, etc.)  
+- Built-in telemetry, analytics, and performance monitoring  
 - Prompt and model management  
 - Automatic failover + fallback  
-- Data loss prevention & access control  
+- Data loss protection  
+- Multi-tenant security  
 - Enterprise-grade observability  
 
-Requesty is deployed on **Google Cloud**, leveraging Cloud Run, Firestore, Pub/Sub, Cloud Load Balancing, Vertex AI, IAM, Secret Manager and GCP monitoring services.
+Requesty is deployed on **Google Cloud**, using Cloud Run, Firestore, Pub/Sub, Cloud Load Balancing, Vertex AI, Secret Manager, IAM, Cloud Logging, and Cloud Monitoring.
 
 ---
 
 ## 🏗️ Architecture on Google Cloud
 
-Below is a high-level architecture diagram of Requesty on GCP:
+Below is a high-level architecture diagram:
 
 ```
 Client Applications / Services
@@ -48,110 +49,109 @@ rules)
  │
  ▼
 Cloud Logging / Cloud Monitoring
-(telemetry, latency tracking, analytics)
+(telemetry, latency, analytics)
 ```
 
-Requesty’s control plane and data plane are both fully serverless, highly scalable, and globally accessible through Google Cloud’s managed infrastructure.
+Requesty’s control plane and inference router both run fully serverless on GCP, ensuring high scalability, global reliability, and strong security isolation.
 
 ---
 
 ## 🔧 Google Cloud Services Used
 
-Requesty relies on several core Google Cloud services:
-
 ### **1. Cloud Run**
-Used to host the stateless API gateway and inference router.  
-It autoscale based on traffic and provides isolation + security.
+Hosts the stateless API gateway and inference routing engine.  
+Autoscaling ensures predictable performance under any load.
 
 ### **2. Cloud Load Balancing**
-Provides global, highly available entry points for all API traffic.
+Provides global routing and efficient distribution of API traffic.
 
 ### **3. Firestore**
 Stores:
-- routing rules  
 - model metadata  
+- routing policies  
 - prompt templates  
-- customer configs  
+- customer configurations  
 - usage policies  
 
 ### **4. Pub/Sub**
 Handles:
-- async tasks  
+- async jobs  
 - provider health checks  
-- telemetry aggregation  
-- delayed jobs  
+- telemetry batching  
+- background tasks  
 
 ### **5. Cloud Functions**
-Executes background workflows triggered by Pub/Sub.
+Executes asynchronous workflows triggered by Pub/Sub.
 
 ### **6. Vertex AI**
-Integrates:
+Used for:
 - Gemini models  
 - embeddings  
 - safety filters  
-- customer-fine-tuned models  
+- customer-tuned models  
 
-All are accessible through the same OpenAI-compatible API.
+Accessible through the same OpenAI-compatible API.
 
 ### **7. Cloud Storage**
-Stores logs, analytics exports, cached embeddings, large artifacts.
+Stores logs, model evaluation output, cached embeddings, and large artifacts.
 
 ### **8. Cloud Logging & Monitoring**
 Provides real-time:
 - latency metrics  
-- error analysis  
 - request traces  
-- SLA reporting  
+- error diagnostics  
+- dashboards & alerts  
 
 ### **9. Secret Manager & IAM**
-Protect API keys, provider credentials and enforce RBAC.
+Manages credentials and enforces multi-tenant access security.
 
 ---
 
 ## 📌 Why Requesty Uses Google Cloud
 
-Google Cloud provides the perfect stack for an AI inference platform:
+Google Cloud offers the ideal infrastructure for large-scale AI inference:
 
-- **Serverless autoscaling** (Cloud Run)  
-- **Global networking** (Load Balancing)  
-- **Low-latency AI models** (Vertex AI Gemini)  
-- **Strong observability** (Ops suite)  
-- **Enterprise-grade security** (IAM, Secret Manager)  
+- **Serverless autoscaling** via Cloud Run  
+- **High reliability & low latency** through Google’s global network  
+- **Native AI with Gemini models**  
+- **Strong observability** through Cloud Logging / Monitoring  
+- **Enterprise-level security** via IAM and Secret Manager  
+- **Scalable storage and messaging** through Firestore, Pub/Sub, and Cloud Storage  
 
-These features allow Requesty to maintain:
+This allows Requesty to maintain:
 - consistent latency  
-- strong reliability  
-- fast global performance  
-- secure multi-tenant isolation  
-
-Even under thousands of concurrent AI requests.
+- high reliability  
+- globally distributed workloads  
+- secure isolation across tenants  
 
 ---
 
-## 🧩 Key Features Powered by GCP
+## 🧩 Key Features Enabled by GCP
 
-### ✔ Unified OpenAI-compatible API  
-Supports 200+ LLMs including Gemini, GPT-4, Claude, Mistral, etc.
+### ✔ Unified OpenAI-Compatible API  
+Supports 200+ LLMs including:  
+Gemini, GPT-4, Claude, Mistral, Llama, Bedrock models, and more.
 
-### ✔ Smart routing  
-Decides the best provider based on:  
-latency, cost, region, model availability, custom business logic.
+### ✔ Intelligent Model Routing  
+Automatically selects the best provider based on:
+- latency  
+- cost  
+- availability  
+- workload patterns  
+- dynamic failover  
 
-### ✔ Telemetry & analytics  
-Real-time dashboards powered by Cloud Logging + Monitoring.
+### ✔ Analytics & Telemetry  
+Powered by Cloud Logging & Monitoring for real-time insights.
 
-### ✔ Prompt & model management  
-Templates, versioning, policies stored in Firestore.
+### ✔ Prompt & Model Management  
+Policies, templates, versions stored in Firestore.
 
-### ✔ Enterprise-grade security  
-IAM, Secret Manager, VPC-secured access.
-
-### ✔ High resilience  
-Automatic failover between providers; circuit breakers included.
+### ✔ High Resilience  
+Built-in fallbacks, retries, circuit breakers, and regional redundancy.
 
 ---
 
-## 🧪 Example (OpenAI-Compatible API)
+## 🧪 Example (OpenAI-Compatible API Request)
 
 ```bash
 curl https://api.requesty.work/v1/chat/completions \
@@ -163,17 +163,18 @@ curl https://api.requesty.work/v1/chat/completions \
       }'
 ```
 
-Works exactly like OpenAI — but can route to Gemini, Claude, Mistral, etc.
+Request behaves exactly like OpenAI, while transparently routing traffic across multiple LLM providers.
 
 ---
 
 ## 📚 Use Cases
 
-- SaaS products adding copilots or assistants  
-- AI-driven workflow automation  
-- Multi-LLM enterprise strategy  
-- Model evaluation and A/B switching  
-- AI integration for regulated industries  
+- SaaS copilots and assistants  
+- Automated workflows  
+- AI research and evaluation  
+- Enterprise multi-LLM strategies  
+- Regulated industries requiring data protection  
+- Cost-optimized AI inference  
 
 ---
 
@@ -191,13 +192,13 @@ https://www.requesty.work/
 
 ---
 
-## ✅ This document is intended for Google Cloud Partner Solution Qualification
+## ✅ Purpose of This Document
 
-This whitepaper demonstrates:
+This document is intended for **Google Cloud Partner Solution Qualification**, demonstrating:
 
 - Real system architecture  
-- Real GCP services integrated  
-- Real use cases & value  
-- A verifiable public link  
+- Actual Google Cloud service usage  
+- Clear technical integration  
+- Publicly accessible documentation  
 
-Perfect for passing **Google Partner “Solution Qualification Review”**.
+This meets Google’s expectations for a valid, production-ready solution.
